@@ -22,11 +22,35 @@ module.exports = function (app) {
     let convertFunction;
     let getString;
 
+    if (!initUnit && checkDiv === "invalid number") {
+      res.json("invalid number and unit");
+    }
+
+    if (!initNum && initUnit) {
+      // finalUnit = initUnit;
+      initNum = 1;
+      returnUnit = convertHandler.getReturnUnit(initUnit);
+      convertFunction = convertHandler.convert(initNum, initUnit);
+      getString = convertHandler.getString(
+        initNum,
+        initUnit,
+        convertFunction,
+        returnUnit
+      );
+      res.json({
+        initNum,
+        initUnit,
+        returnNum: convertFunction,
+        returnUnit,
+        string: getString,
+      });
+    }
+
     if (initUnit) {
       console.log(`The unit is valid check for div`);
       if (checkDiv) {
         if (checkDiv === "invalid number") {
-          res.json("The number is invalid please enter a valid number");
+          res.json("invalid number");
         } else {
           finalUnit = initUnit;
           finalNum = checkDiv;
@@ -66,7 +90,7 @@ module.exports = function (app) {
         });
       }
     } else {
-      res.json(`The unit is invalid please enter a valid unit`);
+      res.json(`invalid unit`);
     }
   });
 };
