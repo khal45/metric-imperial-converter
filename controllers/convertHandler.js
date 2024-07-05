@@ -15,7 +15,7 @@ function ConvertHandler() {
           numsBefore += splitDiv[0];
           const charsAfter = splitDiv[1];
           charsAfter.split("").filter((element) => {
-            if (!isNaN(element)) {
+            if (!isNaN(element) || element === ".") {
               numsAfter += element;
             }
           });
@@ -28,18 +28,52 @@ function ConvertHandler() {
     }
   };
 
+  this.returnFrac = (input) => {
+    const splitStr = input.split("");
+    const splitDiv = input.split("/");
+    const divCount = splitStr.filter((element) => element === "/").length;
+    let num;
+    if (!input.includes("/")) {
+      return;
+    } else {
+      if (divCount === 1) {
+        if (splitStr.includes("/")) {
+          let numsBefore = "";
+          let numsAfter = "";
+          numsBefore += splitDiv[0];
+          const charsAfter = splitDiv[1];
+          charsAfter.split("").filter((element) => {
+            if (!isNaN(element) || element === ".") {
+              numsAfter += element;
+            }
+          });
+          num = numsBefore / numsAfter;
+          return `${numsBefore} / ${numsAfter}`;
+        }
+      } else {
+        return "invalid number";
+      }
+    }
+  };
+
   this.getNum = (input) => {
     // to get number split the string and return only the number
     //Split the string
-    const splitStr = input.split("");
     let num = "";
-    // Loop through the returned array
-    splitStr.forEach((element, index) => {
-      // If the current character is a number, then append it to a new string
-      if ((!isNaN(element) && element.trim() !== "") || element === ".") {
-        num += element;
-      }
-    });
+    const validUnits = ["gal", "l", "lbs", "kg", "mi", "km"];
+    if (validUnits.includes(input.toLocaleLowerCase())) {
+      num = 1;
+    } else {
+      const splitStr = input.split("");
+      // Loop through the returned array
+      splitStr.forEach((element, index) => {
+        // If the current character is a number, then append it to a new string
+        if ((!isNaN(element) && element.trim() !== "") || element === ".") {
+          num += element;
+        }
+      });
+    }
+
     return num;
   };
 
@@ -62,7 +96,7 @@ function ConvertHandler() {
       console.log("valid unit");
       return lowercaseUnit;
     } else {
-      console.log("invalid unit");
+      return "invalid unit";
     }
   };
 
